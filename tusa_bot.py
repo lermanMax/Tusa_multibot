@@ -119,8 +119,9 @@ def main():
         offset = last_update_id + 1
 
 if __name__ == '__main__':
-  main()
-  # try:
-  #   main()
-  # except:
-  #   exit()
+  # main()
+  while True:
+      try:
+        main()
+      except:
+        time.sleep(5)
