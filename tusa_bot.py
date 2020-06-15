@@ -13,7 +13,7 @@ class BotClass:
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
 
-    def get_updates(self, offset=None, timeout=100):
+    def get_updates(self, offset=None, timeout=1000):
         method = 'getUpdates'   # метод для получения обновлений через long polling
         params = {'timeout': timeout, 'offset': offset} # offset указывает id обновления начиная с которого их нужно получать
         resp = requests.get(self.api_url + method, params)
@@ -27,7 +27,7 @@ class BotClass:
         resp = requests.post(self.api_url + method, params)
         return resp
 
-    def get_last_update(self, offset=None, timeout=100):
+    def get_last_update(self, offset=None, timeout=1000):
         get_result = self.get_updates(offset, timeout)
 
         if len(get_result) > 0: last_update = get_result[-1]
