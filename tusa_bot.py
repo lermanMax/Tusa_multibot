@@ -3,6 +3,7 @@
 import json
 import requests
 import datetime
+import time
 
 token = '1183110811:AAGNJmL0YF_QfdlixXaAipFe1CkTyTy9ZoI'
 way_to_tusapoints = 'data/tusapoints.txt'
