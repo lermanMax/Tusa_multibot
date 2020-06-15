@@ -121,8 +121,9 @@ def main():
 
 if __name__ == '__main__':
   # main()
-  while True:
+  for i in range(5):
       try:
         main()
       except:
-        time.sleep(5)
+        print('except')
+        time.sleep(5*(1+i))
