@@ -1,9 +1,10 @@
 import json
 import requests
 import datetime
+import time
 
 token = '1183110811:AAGNJmL0YF_QfdlixXaAipFe1CkTyTy9ZoI'
-way_to_tusapoints = 'drive/My Drive/Tusabot_Data/tusapoints.txt'
+way_to_tusapoints = 'tusapoints.txt'
 
 class BotClass:
 
@@ -46,9 +47,13 @@ def main():
     how_writing_new_tusapoint_id = set()
 
     while True:
-# ------------------------------------------------------------------------------ этот блок получает обновления от бота
+
+# этот блок получает обновления от бота
+# ------------------------------------------------------------------------------
         last_update = tusabot.get_last_update(offset)
         print(last_update)
+
+        if last_update == None: continue
 
         last_update_id = last_update['update_id']
 
@@ -70,8 +75,8 @@ def main():
           last_chat_name = None
 
         print(last_chat_text)
-
-# ------------------------------------------------------------------------------ логика бота
+# логика бота
+# ------------------------------------------------------------------------------
         if today == now.day and 9 <= now.hour < 18:
           tusabot.send_message(last_chat_id, 'Добрый день, {}'.format(last_chat_name))
           today += 1
@@ -117,8 +122,9 @@ def main():
         offset = last_update_id + 1
 
 if __name__ == '__main__':
-  main()
-  # try:
-  #   main()
-  # except:
-  #   exit()
+  for i in range(5):
+      try:
+        main()
+      except:
+        print('except')
+        time.sleep(5*(1+i))
