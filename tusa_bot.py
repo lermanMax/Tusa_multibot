@@ -1,34 +1,38 @@
-# -*- coding: utf-8 -*-
-
 import json
 import requests
 import datetime
 import time
 
 token = '1183110811:AAGNJmL0YF_QfdlixXaAipFe1CkTyTy9ZoI'
-way_to_tusapoints = 'data/tusapoints.txt'
+way_to_tusapoints = 'tusapoints.txt'
+
+proxies = {
+  'http': 'socks5h://94.103.81.38:1088',
+  'https': 'socks5h://94.103.81.38:1088',
+}
+
 
 class BotClass:
 
-    def __init__(self, token):
+    def __init__(self, token, proxies):
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
+        self.proxies = proxies
 
-    def get_updates(self, offset=None, timeout=1000):
+    def get_updates(self, offset=None, timeout=100):
         method = 'getUpdates'   # метод для получения обновлений через long polling
         params = {'timeout': timeout, 'offset': offset} # offset указывает id обновления начиная с которого их нужно получать
-        resp = requests.get(self.api_url + method, params)
+        resp = requests.get(self.api_url + method, params, proxies = self.proxies)
         result_json = resp.json()['result']
         return result_json
 
-    def send_message(self, chat_id, text, keyboard=None):
+    def send_message(self, chat_id, text, reply_markup=None):
         method = 'sendMessage'
-        reply_markup = json.dumps(keyboard)
         params = {'chat_id': chat_id, 'text': text, 'reply_markup': reply_markup}
-        resp = requests.post(self.api_url + method, params)
+        resp = requests.post(self.api_url + method, params, proxies = self.proxies)
         return resp
 
-    def get_last_update(self, offset=None, timeout=1000):
+    def get_last_update(self, offset=None, timeout=100):
         get_result = self.get_updates(offset, timeout)
 
         if len(get_result) > 0: last_update = get_result[-1]
@@ -40,7 +44,7 @@ class BotClass:
 
 
 
-tusabot = BotClass(token)
+tusabot = BotClass(token,proxies)
 
 def main():
     offset = None
@@ -52,21 +56,24 @@ def main():
     while True:
 
 # этот блок получает обновления от бота
-# -----------------------------------------------------------------------------
-
+# ------------------------------------------------------------------------------
         last_update = tusabot.get_last_update(offset)
         print(last_update)
+
+        if last_update == None: continue
 
         last_update_id = last_update['update_id']
 
         if 'message' in last_update:
             last_chat_id = last_update['message']['from']['id']
             last_chat_text = last_update['message']['text']
+
             last_chat_name = last_update['message']['from']['first_name']
 
         elif 'callback_query' in last_update:
             last_chat_id = last_update['callback_query']['from']['id']
             last_chat_text = last_update['callback_query']['data']
+
             last_chat_name = last_update['callback_query']['from']['first_name']
 
         else:
@@ -75,9 +82,8 @@ def main():
             last_chat_name = None
 
         print(last_chat_text)
-
 # логика бота
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
         if today == now.day and 9 <= now.hour < 18:
             tusabot.send_message(last_chat_id, 'Добрый день, {}'.format(last_chat_name))
             today += 1
@@ -92,7 +98,7 @@ def main():
 
             with open(way_to_tusapoints, 'r') as f:
                 for s in f:
-                    keyboard = {'inline_keyboard': [[{'text': '🗑 delete', 'callback_data': 'delete_tusapoint'}]]}
+                    keyboard = json.dumps({'inline_keyboard': [[{'text': '🗑 delete', 'callback_data': 'delete_tusapoint'}]]})
                     tusabot.send_message(last_chat_id, s, keyboard)
 
         elif last_chat_text == 'delete_tusapoint':
@@ -102,14 +108,17 @@ def main():
                 for s in f:
                     if s != dtext:
                         data_from_file.append(s)
+            print(data_from_file)
             with open(way_to_tusapoints, 'w') as f:
                 for s in data_from_file:
                     f.write( s )
+
             tusabot.send_message(last_chat_id, 'Стёр')
 
         elif last_chat_id in how_writing_new_tusapoint_id:
             with open(way_to_tusapoints, 'a') as f:
                 f.write( last_chat_text + '\n')
+                print(last_chat_text)
             tusabot.send_message(last_chat_id, 'Записал')
             how_writing_new_tusapoint_id.remove(last_chat_id)
 
@@ -120,10 +129,10 @@ def main():
         offset = last_update_id + 1
 
 if __name__ == '__main__':
-  # main()
-  for i in range(5):
-      try:
-        main()
-      except:
-        print('except')
-        time.sleep(5*(1+i))
+    for i in range(5):
+        try:
+            main()
+        except:
+            print('except',i)
+            time.sleep(5*(1+i))
+    main()
