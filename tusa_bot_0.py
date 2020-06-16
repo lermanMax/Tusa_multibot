@@ -130,10 +130,10 @@ def main():
         offset = last_update_id + 1
 
 if __name__ == '__main__':
-  main()
-  # for i in range(5):
-  #     try:
-  #       main()
-  #     except:
-  #       print('except')
-  #       time.sleep(5*(1+i))
+  # main()
+  for i in range(5):
+      try:
+        main()
+      except:
+        print('except')
+        time.sleep(5*(1+i))
