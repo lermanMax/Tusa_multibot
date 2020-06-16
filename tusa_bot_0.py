@@ -7,11 +7,10 @@ token = '1183110811:AAGNJmL0YF_QfdlixXaAipFe1CkTyTy9ZoI'
 way_to_tusapoints = 'tusapoints.txt'
 
 proxies = {
-  'http': 'socks5://94.103.81.38:1088',
-  'https': 'socks5://94.103.81.38:1088',
+  'http': 'socks5h://94.103.81.38:1088',
+  'https': 'socks5h://94.103.81.38:1088',
 }
 
-requests.get('http://example.org', proxies=proxies)
 
 class BotClass:
 
