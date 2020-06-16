@@ -134,5 +134,5 @@ if __name__ == '__main__':
       try:
         main()
       except:
-        print('except')
+        print('except',i)
         time.sleep(5*(1+i))
