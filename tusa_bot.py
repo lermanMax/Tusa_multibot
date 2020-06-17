@@ -54,6 +54,7 @@ def main():
 
     how_writing_new_tusapoint_id = set()
     how_writing_debts_id = set()
+    how_saw_hello = set()
 
     while True:
 
@@ -86,9 +87,14 @@ def main():
         print(last_chat_text)
 # логика бота
 # ------------------------------------------------------------------------------
-        if today == now.day and 9 <= now.hour < 18:
-            tusabot.send_message(last_chat_id, 'Добрый день, {}'.format(last_chat_name))
+        if today == now.day and 5 <= now.hour < 6:
+            how_saw_hello.clear()
             today += 1
+
+        if last_chat_id not in how_saw_hello:
+            tusabot.send_message(last_chat_id, 'Приветствую, {}. Для чего я создан?'.format(last_chat_name))
+            how_saw_hello.add(last_chat_id)
+
 
 
         if last_chat_text == '/new_tusapoint':
@@ -120,7 +126,7 @@ def main():
                 for s in data_from_file:
                     f.write( s )
 
-            tusabot.send_message(last_chat_id, 'Стёр "'+dtext[:10]+'"...')
+            tusabot.send_message(last_chat_id, 'Стёр: '+dtext[:10].strip()+'...')
 
         elif last_chat_id in how_writing_debts_id:
             tusabot.send_message(last_chat_id, 'Вычисляю...')
