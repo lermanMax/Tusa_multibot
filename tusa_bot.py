@@ -3,49 +3,16 @@ import requests
 import datetime
 import time
 import NOdebts
+import BotClass
 
 token = '1183110811:AAGNJmL0YF_QfdlixXaAipFe1CkTyTy9ZoI'
 way_to_tusapoints = 'tusapoints.txt'
-
 proxies = {
   'http': 'socks5h://94.103.81.38:1088',
   'https': 'socks5h://94.103.81.38:1088',
 }
 
-
-class BotClass:
-
-    def __init__(self, token, proxies):
-        self.token = token
-        self.api_url = "https://api.telegram.org/bot{}/".format(token)
-        self.proxies = proxies
-
-    def get_updates(self, offset=None, timeout=100):
-        method = 'getUpdates'   # метод для получения обновлений через long polling
-        params = {'timeout': timeout, 'offset': offset} # offset указывает id обновления начиная с которого их нужно получать
-        resp = requests.get(self.api_url + method, params, proxies = self.proxies)
-        result_json = resp.json()['result']
-        return result_json
-
-    def send_message(self, chat_id, text, reply_markup=None):
-        method = 'sendMessage'
-        params = {'chat_id': chat_id, 'text': text, 'reply_markup': reply_markup}
-        resp = requests.post(self.api_url + method, params, proxies = self.proxies)
-        return resp
-
-    def get_last_update(self, offset=None, timeout=100):
-        get_result = self.get_updates(offset, timeout)
-
-        if len(get_result) > 0: last_update = get_result[-1]
-        else: last_update = None
-
-        return last_update
-
-
-
-
-
-tusabot = BotClass(token,proxies)
+tusabot = BotClass.BotClass(token,proxies)
 
 def main():
     offset = None
@@ -57,7 +24,6 @@ def main():
     how_saw_hello = set()
 
     while True:
-
 # этот блок получает обновления от бота
 # ------------------------------------------------------------------------------
         last_update = tusabot.get_last_update(offset)
@@ -154,6 +120,7 @@ def main():
 
 
         offset = last_update_id + 1
+
 
 if __name__ == '__main__':
     for i in range(5):
