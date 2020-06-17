@@ -123,13 +123,16 @@ def main():
             tusabot.send_message(last_chat_id, 'Стёр')
 
         elif last_chat_id in how_writing_debts_id:
+            tusabot.send_message(last_chat_id, 'Вычисляю...')
             users = {}
-            b = last_chat_text.split(' ')
-            for i in range(0,len(b),2): users[b[i]]= int(b[i+1])
+            lst = last_chat_text.replace(' ', '\n').strip().split('\n')
+            for i in range(0,len(lst),2): users[lst[i]]= int(lst[i+1])
             trans = NOdebts.equally(users)
-            tusabot.send_message(last_chat_id, 'Вот список транзакций:')
+
+            one_str = 'Вот список транзакций:\n'
             for i in trans:
-                tusabot.send_message(last_chat_id, i+': '+ str(trans[i]))               
+                one_str += i+': '+ str(trans[i])+ '\n'
+            tusabot.send_message(last_chat_id, one_str)               
 
 
 
