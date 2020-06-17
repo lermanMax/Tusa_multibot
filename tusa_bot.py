@@ -97,7 +97,7 @@ def main():
 
         elif last_chat_text == '/go_debts':
             tusabot.send_message(last_chat_id, 'Нужны данные в таком виде:')
-            tusabot.send_message(last_chat_id, 'Чувак1 1000\n Чувиха1 200\n Чувак2 0\n')
+            tusabot.send_message(last_chat_id, 'Чувак1 1000\nЧувиха1 200\nЧувак2 0\nЧувиха2 0')
             how_writing_debts_id.add(last_chat_id)
 
         elif last_chat_text == '/get_list':
@@ -132,7 +132,7 @@ def main():
             one_str = 'Вот список транзакций:\n'
             for i in trans:
                 one_str += i+': '+ str(trans[i])+ '\n'
-            tusabot.send_message(last_chat_id, one_str)               
+            tusabot.send_message(last_chat_id, one_str)
 
 
 
