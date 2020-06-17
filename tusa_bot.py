@@ -2,6 +2,7 @@ import json
 import requests
 import datetime
 import time
+import NOdebts
 
 token = '1183110811:AAGNJmL0YF_QfdlixXaAipFe1CkTyTy9ZoI'
 way_to_tusapoints = 'tusapoints.txt'
@@ -52,6 +53,8 @@ def main():
     today = now.day
 
     how_writing_new_tusapoint_id = set()
+    how_writing_debts_id = set()
+    how_saw_hello = set()
 
     while True:
 
@@ -84,14 +87,24 @@ def main():
         print(last_chat_text)
 # логика бота
 # ------------------------------------------------------------------------------
-        if today == now.day and 9 <= now.hour < 18:
-            tusabot.send_message(last_chat_id, 'Добрый день, {}'.format(last_chat_name))
+        if today == now.day and 5 <= now.hour < 6:
+            how_saw_hello.clear()
             today += 1
+
+        if last_chat_id not in how_saw_hello:
+            tusabot.send_message(last_chat_id, 'Приветствую, {}. Для чего я создан?'.format(last_chat_name))
+            how_saw_hello.add(last_chat_id)
+
 
 
         if last_chat_text == '/new_tusapoint':
             tusabot.send_message(last_chat_id, 'Что у тебя?')
             how_writing_new_tusapoint_id.add(last_chat_id)
+
+        elif last_chat_text == '/go_debts':
+            tusabot.send_message(last_chat_id, 'Напиши, кто сколько потратил?\nНужна инфа в таком виде:')
+            tusabot.send_message(last_chat_id, 'Чувак 1000\nЧувиха 200\nПарнишка 0\nДевчонка 0')
+            how_writing_debts_id.add(last_chat_id)
 
         elif last_chat_text == '/get_list':
             tusabot.send_message(last_chat_id, 'Вот:')
@@ -113,7 +126,21 @@ def main():
                 for s in data_from_file:
                     f.write( s )
 
-            tusabot.send_message(last_chat_id, 'Стёр')
+            tusabot.send_message(last_chat_id, 'Стёр: '+dtext[:10].strip()+'...')
+
+        elif last_chat_id in how_writing_debts_id:
+            tusabot.send_message(last_chat_id, 'Вычисляю...')
+            users = {}
+            lst = last_chat_text.replace(' ', '\n').strip().split('\n')
+            for i in range(0,len(lst),2): users[lst[i]]= int(lst[i+1])
+            trans = NOdebts.equally(users)
+
+            one_str = 'Вот список транзакций:\n'
+            for i in trans:
+                one_str += i+': '+ str(trans[i])+ '\n'
+            tusabot.send_message(last_chat_id, one_str)
+
+
 
         elif last_chat_id in how_writing_new_tusapoint_id:
             with open(way_to_tusapoints, 'a') as f:
