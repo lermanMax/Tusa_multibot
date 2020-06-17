@@ -14,6 +14,31 @@ proxies = {
 
 tusabot = BotClass.BotClass(token,proxies)
 
+def new_tusapoint(text, base):
+    with open(base, 'a') as f:
+        f.write( text + '\n')
+        print(text)
+    return
+
+def delete_tusapoint(text, base):
+    data_from_file = []
+    with open(base, 'r') as f:
+        for s in f:
+            if s != text: data_from_file.append(s)
+    print(data_from_file)
+    with open(base, 'w') as f:
+        for s in data_from_file:
+            f.write( s )
+    return
+
+def get_list(base):
+    list = []
+    with open(base, 'r') as f:
+        for s in f: list.append(s)
+    return list
+
+
+
 def main():
     offset = None
     now = datetime.datetime.now()
@@ -56,11 +81,9 @@ def main():
         if today == now.day and 5 <= now.hour < 6:
             how_saw_hello.clear()
             today += 1
-
         if last_chat_id not in how_saw_hello:
             tusabot.send_message(last_chat_id, 'Приветствую, {}. Для чего я создан?'.format(last_chat_name))
             how_saw_hello.add(last_chat_id)
-
 
 
         if last_chat_text == '/new_tusapoint':
@@ -74,44 +97,31 @@ def main():
 
         elif last_chat_text == '/get_list':
             tusabot.send_message(last_chat_id, 'Вот:')
-
-            with open(way_to_tusapoints, 'r') as f:
-                for s in f:
-                    keyboard = json.dumps({'inline_keyboard': [[{'text': '🗑 delete', 'callback_data': 'delete_tusapoint'}]]})
-                    tusabot.send_message(last_chat_id, s, keyboard)
+            keyboard = json.dumps({'inline_keyboard': [[{'text': '🗑 delete', 'callback_data': 'delete_tusapoint'}]]})
+            list_tusapoints = get_list(way_to_tusapoints)
+            for i in list_tusapoints: tusabot.send_message(last_chat_id, i, keyboard)
 
         elif last_chat_text == 'delete_tusapoint':
             dtext = last_update['callback_query']['message']['text']+ '\n'
-            data_from_file = []
-            with open(way_to_tusapoints, 'r') as f:
-                for s in f:
-                    if s != dtext:
-                        data_from_file.append(s)
-            print(data_from_file)
-            with open(way_to_tusapoints, 'w') as f:
-                for s in data_from_file:
-                    f.write( s )
-
+            delete_tusapoint(dtext, way_to_tusapoints)
             tusabot.send_message(last_chat_id, 'Стёр: '+dtext[:10].strip()+'...')
 
         elif last_chat_id in how_writing_debts_id:
             tusabot.send_message(last_chat_id, 'Вычисляю...')
+            #библиотека участников с вложенной ими суммой
             users = {}
             lst = last_chat_text.replace(' ', '\n').strip().split('\n')
             for i in range(0,len(lst),2): users[lst[i]]= int(lst[i+1])
+            #вычисления для этой библиотеки
             trans = NOdebts.equally(users)
-
+            # формирование ответа
             one_str = 'Вот список транзакций:\n'
             for i in trans:
                 one_str += i+': '+ str(trans[i])+ '\n'
             tusabot.send_message(last_chat_id, one_str)
 
-
-
         elif last_chat_id in how_writing_new_tusapoint_id:
-            with open(way_to_tusapoints, 'a') as f:
-                f.write( last_chat_text + '\n')
-                print(last_chat_text)
+            new_tusapoint(last_chat_text, way_to_tusapoints)
             tusabot.send_message(last_chat_id, 'Записал')
             how_writing_new_tusapoint_id.remove(last_chat_id)
 
@@ -129,4 +139,5 @@ if __name__ == '__main__':
         except:
             print('except',i)
             time.sleep(5*(1+i))
+    tusabot.send_message(98244574, 'Силы покидают меня...')
     main()
