@@ -96,8 +96,8 @@ def main():
             how_writing_new_tusapoint_id.add(last_chat_id)
 
         elif last_chat_text == '/go_debts':
-            tusabot.send_message(last_chat_id, 'Нужны данные в таком виде:')
-            tusabot.send_message(last_chat_id, 'Чувак1 1000\nЧувиха1 200\nЧувак2 0\nЧувиха2 0')
+            tusabot.send_message(last_chat_id, 'Напиши, кто сколько потратил?\nНужна инфа в таком виде:')
+            tusabot.send_message(last_chat_id, 'Чувак 1000\nЧувиха 200\nПарнишка 0\nДевчонка 0')
             how_writing_debts_id.add(last_chat_id)
 
         elif last_chat_text == '/get_list':
@@ -120,7 +120,7 @@ def main():
                 for s in data_from_file:
                     f.write( s )
 
-            tusabot.send_message(last_chat_id, 'Стёр')
+            tusabot.send_message(last_chat_id, 'Стёр "'+dtext[:10]+'"...')
 
         elif last_chat_id in how_writing_debts_id:
             tusabot.send_message(last_chat_id, 'Вычисляю...')
