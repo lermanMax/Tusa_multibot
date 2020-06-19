@@ -1,3 +1,6 @@
+import json
+import requests
+
 class BotClass:
 
     def __init__(self, token, proxies):
