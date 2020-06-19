@@ -3,11 +3,12 @@ import requests
 import datetime
 import time
 import NOdebts
+import click
 
 token = '1183110811:AAGNJmL0YF_QfdlixXaAipFe1CkTyTy9ZoI'
 way_to_tusapoints = 'tusapoints.txt'
 
-proxies = {
+socks = {
   'http': 'socks5h://94.103.81.38:1088',
   'https': 'socks5h://94.103.81.38:1088',
 }
@@ -15,7 +16,7 @@ proxies = {
 
 class BotClass:
 
-    def __init__(self, token, proxies):
+    def __init__(self, token, proxies=None):
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
         self.proxies = proxies
@@ -45,9 +46,15 @@ class BotClass:
 
 
 
-tusabot = BotClass(token,proxies)
 
-def main():
+
+@click.command()
+@click.argument('proxies_on')
+def main(proxies_on):
+    proxies = None
+    if proxies_on =='yes': proxies = socks
+    tusabot = BotClass(token,proxies)
+
     offset = None
     now = datetime.datetime.now()
     today = now.day
