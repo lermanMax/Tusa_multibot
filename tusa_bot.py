@@ -14,8 +14,6 @@ socks = {
   'https': 'socks5h://94.103.81.38:1088',
 }
 
-tusabot = BotClass.BotClass(token,proxies)
-
 def new_tusapoint(text, base):
     with open(base, 'a') as f:
         f.write( text + '\n')
