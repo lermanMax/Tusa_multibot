@@ -54,7 +54,7 @@ def main():
         last_update = tusabot.get_last_update(offset)
         print(last_update)
 
-        if last_update == None: continue
+        if last_update == None: continue # ждать обновлений
 
         last_update_id = last_update['update_id']
 
