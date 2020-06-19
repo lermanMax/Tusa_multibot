@@ -42,7 +42,7 @@ def get_list(base):
 def main(proxies_on):
     proxies = None
     if proxies_on =='yes': proxies = socks
-    tusabot = BotClass(token,proxies)
+    tusabot = BotClass.BotClass(token,proxies)
 
     offset = None
     now = datetime.datetime.now()
@@ -143,6 +143,6 @@ if __name__ == '__main__':
     #     except:
     #         print('except',i)
     #         time.sleep(5*(1+i))
-    
+
     # tusabot.send_message(98244574, 'Силы покидают меня...')
     main()
