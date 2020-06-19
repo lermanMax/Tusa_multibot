@@ -4,10 +4,12 @@ import datetime
 import time
 import NOdebts
 import BotClass
+import click
 
 token = '1183110811:AAGNJmL0YF_QfdlixXaAipFe1CkTyTy9ZoI'
 way_to_tusapoints = 'tusapoints.txt'
-proxies = {
+
+socks = {
   'http': 'socks5h://94.103.81.38:1088',
   'https': 'socks5h://94.103.81.38:1088',
 }
@@ -37,9 +39,13 @@ def get_list(base):
         for s in f: list.append(s)
     return list
 
+@click.command()
+@click.argument('proxies_on')
+def main(proxies_on):
+    proxies = None
+    if proxies_on =='yes': proxies = socks
+    tusabot = BotClass(token,proxies)
 
-
-def main():
     offset = None
     now = datetime.datetime.now()
     today = now.day
