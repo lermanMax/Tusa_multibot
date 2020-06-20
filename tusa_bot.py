@@ -52,6 +52,8 @@ def main(proxies_on):
     how_writing_debts_id = set()
     how_saw_hello = set()
 
+    last_command_from_user = {}
+
     while True:
 # этот блок получает обновления от бота
 # ------------------------------------------------------------------------------
@@ -93,11 +95,13 @@ def main(proxies_on):
         if last_chat_text == '/new_tusapoint':
             tusabot.send_message(last_chat_id, 'Что у тебя?')
             how_writing_new_tusapoint_id.add(last_chat_id)
+            last_command_from_user[last_chat_id] = '/new_tusapoint'
 
         elif last_chat_text == '/go_debts':
             tusabot.send_message(last_chat_id, 'Напиши, кто сколько потратил?\nНужна инфа в таком виде:')
             tusabot.send_message(last_chat_id, 'Чувак 1000\nЧувиха 200\nПарнишка 0\nДевчонка 0')
             how_writing_debts_id.add(last_chat_id)
+            last_command_from_user[last_chat_id] = '/go_debts'
 
         elif last_chat_text == '/get_list':
             tusabot.send_message(last_chat_id, 'Вот:')
@@ -110,7 +114,8 @@ def main(proxies_on):
             delete_tusapoint(dtext, way_to_tusapoints)
             tusabot.send_message(last_chat_id, 'Стёр: '+dtext[:10].strip()+'...')
 
-        elif last_chat_id in how_writing_debts_id:
+        # elif last_chat_id in how_writing_debts_id:
+        elif last_command_from_user[last_chat_id] == '/go_debts':
             tusabot.send_message(last_chat_id, 'Вычисляю...')
 
             try:
@@ -128,11 +133,16 @@ def main(proxies_on):
             except:
                 tusabot.send_message(last_chat_id, 'Херовые данные чет')
 
+            how_writing_debts_id.remove(last_chat_id)
+            last_command_from_user[last_chat_id] = None
 
-        elif last_chat_id in how_writing_new_tusapoint_id:
+
+        # elif last_chat_id in how_writing_new_tusapoint_id:
+        elif last_command_from_user[last_chat_id] == '/new_tusapoint':
             new_tusapoint(last_chat_text, way_to_tusapoints)
             tusabot.send_message(last_chat_id, 'Записал')
             how_writing_new_tusapoint_id.remove(last_chat_id)
+            last_command_from_user[last_chat_id] = None
 
         else:
             tusabot.send_message(last_chat_id, 'Что это?')
