@@ -84,6 +84,9 @@ def main(proxies_on):
             last_chat_name = None
 
         print(last_chat_text)
+
+        if last_chat_id not in last_command_from_user:
+            last_command_from_user[last_chat_id] = None  
 # логика бота
 # ------------------------------------------------------------------------------
         if today == now.day and 5 <= now.hour < 6:
