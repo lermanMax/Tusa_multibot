@@ -159,7 +159,7 @@ if __name__ == '__main__':
             main()
         except:
             print('except',i)
-            time.sleep(5*(1+i))
+            time.sleep(15)
 
     # # tusabot.send_message(98244574, 'Силы покидают меня...')
-    # main()
+    main()
