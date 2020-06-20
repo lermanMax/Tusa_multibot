@@ -112,17 +112,22 @@ def main(proxies_on):
 
         elif last_chat_id in how_writing_debts_id:
             tusabot.send_message(last_chat_id, 'Вычисляю...')
-            #библиотека участников с вложенной ими суммой
-            users = {}
-            lst = last_chat_text.replace(' ', '\n').strip().split('\n')
-            for i in range(0,len(lst),2): users[lst[i]]= int(lst[i+1])
-            #вычисления для этой библиотеки
-            trans = NOdebts.equally(users)
-            # формирование ответа
-            one_str = 'Вот список транзакций:\n'
-            for i in trans:
-                one_str += i+': '+ str(trans[i])+ '\n'
-            tusabot.send_message(last_chat_id, one_str)
+
+            try:
+                #библиотека участников с вложенной ими суммой
+                users = {}
+                lst = last_chat_text.replace(' ', '\n').strip().split('\n')
+                for i in range(0,len(lst),2): users[lst[i]]= int(lst[i+1])
+                #вычисления для этой библиотеки
+                trans = NOdebts.equally(users)
+                # формирование ответа
+                one_str = 'Вот список транзакций:\n'
+                for i in trans:
+                    one_str += i+': '+ str(trans[i])+ '\n'
+                tusabot.send_message(last_chat_id, one_str)
+            except:
+                tusabot.send_message(last_chat_id, 'Херовые данные чет')
+
 
         elif last_chat_id in how_writing_new_tusapoint_id:
             new_tusapoint(last_chat_text, way_to_tusapoints)
