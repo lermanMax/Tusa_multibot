@@ -69,7 +69,9 @@ def main(proxies_on):
             last_chat_name = last_update['message']['from']['first_name']
             if 'text' in last_update['message']:
                 last_chat_text = last_update['message']['text']
-            else: continue # не реагировать на сообщения кроме текстовых
+            else: # не реагировать на сообщения кроме текстовых
+                last_chat_text = None
+                continue
 
         elif 'callback_query' in last_update:
             last_chat_id = last_update['callback_query']['from']['id']
