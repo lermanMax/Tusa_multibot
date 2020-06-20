@@ -137,12 +137,12 @@ def main(proxies_on):
 
 
 if __name__ == '__main__':
-    # for i in range(5):
-    #     try:
-    #         main()
-    #     except:
-    #         print('except',i)
-    #         time.sleep(5*(1+i))
+    for i in range(5):
+        try:
+            main()
+        except:
+            print('except',i)
+            time.sleep(5*(1+i))
 
-    # tusabot.send_message(98244574, 'Силы покидают меня...')
-    main()
+    # # tusabot.send_message(98244574, 'Силы покидают меня...')
+    # main()
