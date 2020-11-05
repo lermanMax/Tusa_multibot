@@ -1,4 +1,4 @@
-def equally(users):
+def equally(users): #принимает словарь key = имена пользователей value = внесенная сумма 
 
     fullbank = sum([users[i] for i in users]) #сколько всего потрачено
     selfbank = int(fullbank/len(users)) #сколько потратил каждый. без дробной части
