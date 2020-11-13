@@ -39,3 +39,53 @@ class BotClass:
         else: last_update = None
 
         return last_update
+    
+    def get_list_messages(self, offset=None, timeout=100):
+        get_result = self.get_updates(offset, timeout)
+        
+        list_messages = []
+        '''
+        [
+        {
+            'update_id': 00000000,
+            'type': 'message',
+            'chat_id': 00000000,
+            'chat_name': 'Name',
+            'text': 'some text'
+        },
+        {
+            'update_id': 00000000,
+            'type': 'callback_query'
+            'chat_id': 00000000
+            'chat_name': 'Name'
+            'message_id': 00000000
+            'data': '{'command':'name', 'arg_1': 00 }'
+        }, ...]
+        '''
+        for update in get_result:
+            print(update)
+            if update == None: continue
+        
+            message = {}
+            message['update_id'] = update['update_id']
+            
+            if 'message' in update:
+                message['type'] = 'message'
+                message['chat_id'] = update['message']['from']['id']
+                message['chat_name'] = update['message']['from']['first_name']
+                message['text'] = update['message'].get('text')
+    
+            elif 'callback_query' in update:
+                message['type'] = 'callback_query'
+                message['chat_id'] = update['callback_query']['from']['id']
+                message['chat_name'] = update['callback_query']['from']['first_name']
+                message['message_id'] = update['callback_query']['message']['message_id']
+                message['data'] = update['callback_query']['data']
+            else:
+                message['type'] = "unknown"
+    
+            list_messages.append(message)
+            
+        return list_messages
+
+    
