@@ -2,7 +2,7 @@ import requests
 
 class BotClass:
 
-    def __init__(self, token, proxies=None):
+    def __init__(self, token=None, proxies=None):
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
         self.proxies = proxies
@@ -59,11 +59,11 @@ class BotClass:
             'chat_id': 00000000
             'chat_name': 'Name'
             'message_id': 00000000
-            'data': '{'command':'name', 'arg_1': 00 }'
+            'data': '{"command":"name", "arg_1": 00 }'
         }, ...]
         '''
         for update in get_result:
-            print(update)
+            
             if update == None: continue
         
             message = {}
